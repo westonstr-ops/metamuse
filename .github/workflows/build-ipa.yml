@@ -1,0 +1,50 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Build unsigned app
+        run: |
+          xcodebuild -project MetaMuse.xcodeproj \
+            -target MetaMuse \
+            -sdk iphoneos \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            SYMROOT="$PWD/build" \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r "build/Release-iphoneos/MetaMuse.app" Payload/
+          zip -r MetaMuse.ipa Payload
+          ls -la MetaMuse.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MetaMuse-ipa
+          path: MetaMuse.ipa
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" MetaMuse.ipa \
+            --title "MetaMuse build ${{ github.run_number }}" \
+            --notes "Unsigned .ipa — sideload with AltStore, it signs it with your Apple ID."
