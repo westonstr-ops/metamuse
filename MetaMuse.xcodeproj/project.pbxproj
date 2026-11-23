@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		AAAA00000000000000000001 /* MetaMuseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777777777777777777777777 /* MetaMuseApp.swift */; };
-		AAAA00000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888888888888888888888888 /* Assets.xcassets */; };
 		AAAA00000000000000000003 /* meta-ai-muse.html in Resources */ = {isa = PBXBuildFile; fileRef = 999999999999999999999999 /* meta-ai-muse.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		666666666666666666666666 /* MetaMuse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaMuse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		777777777777777777777777 /* MetaMuseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaMuseApp.swift; sourceTree = <group>; };
-		888888888888888888888888 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = <group>; };
 		999999999999999999999999 /* meta-ai-muse.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = meta-ai-muse.html; sourceTree = <group>; };
 /* End PBXFileReference section */
 
@@ -42,7 +40,6 @@
 			isa = PBXGroup;
 			children = (
 				777777777777777777777777 /* MetaMuseApp.swift */,
-				888888888888888888888888 /* Assets.xcassets */,
 				999999999999999999999999 /* meta-ai-muse.html */,
 			);
 			path = MetaMuse;
@@ -114,7 +111,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAAA00000000000000000003 /* meta-ai-muse.html in Resources */,
-				AAAA00000000000000000002 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
