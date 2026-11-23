@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Meta AI + Muse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f3;
+    --surface:#ffffff;
+    --surface-2:#eef0ec;
+    --surface-3:#e6e9e3;
+    --ink:#101613;
+    --ink-2:#3d4741;
+    --ink-3:#6b7770;
+    --line:#dde1da;
+    --meta:#7c3aed;
+    --meta-soft:#ede9fe;
+    --meta-ink:#4c1d95;
+    --muse:#0064e0;
+    --muse-soft:#e3efff;
+    --muse-ink:#003d8f;
+    --merged:#111613;
+    --accent:#ffb020;
+    --radius:18px;
+    --shadow:0 12px 32px rgba(16,22,19,.08), 0 2px 8px rgba(16,22,19,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0c0f0d;
+      --surface:#151916;
+      --surface-2:#1c211d;
+      --surface-3:#242b26;
+      --ink:#f2f4f1;
+      --ink-2:#c3ccc5;
+      --ink-3:#8a968d;
+      --line:#2a332c;
+      --meta:#a78bfa;
+      --meta-soft:#2a1a56;
+      --meta-ink:#d8c9ff;
+      --muse:#4da3ff;
+      --muse-soft:#132a4a;
+      --muse-ink:#a8ccff;
+      --merged:#f2f4f1;
+      --shadow:0 12px 32px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  button{font:inherit;cursor:pointer}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px 56px}
+
+  /* ---- intro ---- */
+  .intro{padding:28px 0 18px;display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:end}
+  @media(max-width:720px){.intro{grid-template-columns:1fr;gap:14px;padding-top:20px}}
+  .merge-mark{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .orb{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;flex:none}
+  .orb.meta{background:var(--meta)}
+  .orb.muse{background:var(--muse)}
+  .orb.plus{width:26px;height:26px;background:var(--ink);color:var(--bg);font-size:16px}
+  .merge-mark span{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  h1{font-size:clamp(32px,5.2vw,54px);line-height:.98;letter-spacing:-.03em;margin:0;font-weight:800}
+  h1 em{font-style:normal;box-shadow:inset 0 -.42em 0 var(--accent)}
+  .intro p{margin:0;color:var(--ink-2);font-size:16px;line-height:1.6}
+  .intro p strong{color:var(--ink)}
+  .intro-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .stat{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700}
+  .stat b{color:var(--meta)} .stat:nth-child(2) b{color:var(--muse)}
+
+  /* ---- app shell ---- */
+  .app{background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+  .app-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .app-top-left{display:flex;align-items:center;gap:10px;min-width:0}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.18);flex:none}
+  .app-top-left strong{font-size:14px;letter-spacing:-.01em}
+  .app-top-left small{display:block;color:var(--ink-3);font-weight:600;font-size:12px}
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;overflow-x:auto;max-width:100%}
+  .seg button{border:0;background:transparent;color:var(--ink-2);font-weight:700;font-size:13px;padding:7px 13px;border-radius:999px;white-space:nowrap;min-height:36px}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+  .seg button:focus-visible,.chip:focus-visible,.send-btn:focus-visible,.ghost-btn:focus-visible{outline:2px solid var(--meta);outline-offset:2px}
+
+  .thread{padding:18px 16px 8px;display:flex;flex-direction:column;gap:18px;min-height:340px}
+  .empty{margin:auto;text-align:center;max-width:420px;padding:28px 10px}
+  .empty .duo-icons{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:14px}
+  .empty h2{margin:0 0 8px;font-size:20px;letter-spacing:-.02em}
+  .empty p{margin:0;color:var(--ink-3);line-height:1.6;font-size:14.5px}
+
+  .turn{display:flex;flex-direction:column;gap:10px}
+  .user-row{display:flex;justify-content:flex-end}
+  .user-bubble{background:var(--ink);color:var(--bg);padding:11px 15px;border-radius:18px 18px 4px 18px;max-width:min(78%,560px);font-size:15px;line-height:1.5;font-weight:600;overflow-wrap:anywhere}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:720px){.duo{grid-template-columns:1fr}}
+  .answer{border:1px solid var(--line);border-radius:16px;padding:14px 15px 13px;background:var(--surface);min-width:0}
+  .answer.meta{border-top:3px solid var(--meta)}
+  .answer.muse{border-top:3px solid var(--muse)}
+  .answer.merged{border:1.5px solid var(--ink);background:var(--surface-2);grid-column:1/-1}
+  .answer-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .answer-head .orb{width:26px;height:26px;font-size:10px}
+  .answer-head strong{font-size:13.5px}
+  .answer-head span{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .answer p{margin:0 0 8px;font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+  .answer p:last-child{margin-bottom:0}
+  .answer p strong,.answer li strong{color:var(--ink)}
+  .answer ul{margin:6px 0 8px;padding-left:18px;color:var(--ink-2);font-size:14.5px;line-height:1.6}
+  .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .tag{font-size:11.5px;font-weight:700;padding:4px 8px;border-radius:999px}
+  .tag.meta{background:var(--meta-soft);color:var(--meta-ink)}
+  .tag.muse{background:var(--muse-soft);color:var(--muse-ink)}
+  .typing{display:inline-flex;gap:4px;padding:6px 2px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);animation:blink 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes blink{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+  @media(prefers-reduced-motion:reduce){.typing i{animation:none;opacity:.6} html{scroll-behavior:auto}}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;padding:4px 16px 12px}
+  .chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;min-height:38px;text-align:left}
+  .chip:hover{background:var(--surface-2)}
+  .chip span{color:var(--ink-3);font-weight:600}
+
+  .composer{border-top:1px solid var(--line);padding:12px;background:var(--surface)}
+  .composer-inner{display:flex;gap:8px;align-items:flex-end;background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:6px 6px 6px 14px}
+  .composer textarea{flex:1;border:0;background:transparent;color:var(--ink);font:inherit;font-size:15px;line-height:1.45;resize:none;max-height:110px;padding:8px 0;outline:none;min-width:0}
+  .composer textarea::placeholder{color:var(--ink-3)}
+  .send-btn{border:0;background:var(--ink);color:var(--bg);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;font-size:18px}
+  .send-btn:disabled{opacity:.35;cursor:default}
+  .composer-meta{display:flex;justify-content:space-between;gap:10px;padding:9px 4px 0;font-size:12px;color:var(--ink-3);font-weight:600;flex-wrap:wrap}
+  .ghost-btn{border:0;background:transparent;color:var(--ink-2);font-weight:700;font-size:12.5px;padding:4px 6px;min-height:32px}
+
+  /* ---- below the app ---- */
+  section{margin-top:44px}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+  .sec-head h2{margin:0;font-size:26px;letter-spacing:-.025em}
+  .sec-head p{margin:0;color:var(--ink-3);font-size:14px;font-weight:600}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:720px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .step .num{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.08em}
+  .step h3{margin:8px 0 6px;font-size:16.5px;letter-spacing:-.01em}
+  .step p{margin:0;color:var(--ink-2);font-size:14px;line-height:1.6}
+
+  .compare{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .compare-row{display:grid;grid-template-columns:1.1fr 1fr 1fr;border-top:1px solid var(--line)}
+  .compare-row:first-child{border-top:0}
+  .compare-row>div{padding:14px 16px;font-size:14px;line-height:1.55;color:var(--ink-2);min-width:0}
+  .compare-row>div+div{border-left:1px solid var(--line)}
+  .compare-row.head{background:var(--surface-2)}
+  .compare-row.head>div{font-weight:800;color:var(--ink);font-size:13.5px;display:flex;align-items:center;gap:8px}
+  .compare-row .label{font-weight:800;color:var(--ink)}
+  @media(max-width:640px){
+    .compare-row{grid-template-columns:1fr}
+    .compare-row>div+div{border-left:0;border-top:1px dashed var(--line)}
+    .compare-row.head{display:none}
+    .compare-row .label{padding-bottom:2px}
+    .compare-row .c-meta::before{content:"Meta AI — ";font-weight:800;color:var(--meta)}
+    .compare-row .c-muse::before{content:"Muse — ";font-weight:800;color:var(--muse)}
+  }
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .dot.meta{background:var(--meta)} .dot.muse{background:var(--muse)}
+
+  .ideas{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:720px){.ideas{grid-template-columns:1fr}}
+  .idea{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;text-align:left;width:100%;color:var(--ink)}
+  .idea:hover{background:var(--surface-2)}
+  .idea .n{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:12px;background:var(--surface-3);border-radius:8px;padding:6px 8px;flex:none}
+  .idea strong{display:block;font-size:15px;margin-bottom:3px}
+  .idea span{color:var(--ink-3);font-size:13.5px;line-height:1.5;display:block}
+
+  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;color:var(--ink-3);font-size:13px;line-height:1.6;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="intro">
+    <div>
+      <div class="merge-mark">
+        <div class="orb meta">M</div>
+        <div class="orb plus">+</div>
+        <div class="orb muse">✦</div>
+        <span>One app concept</span>
+      </div>
+      <h1>Ask once.<br>Get <em>both brains.</em></h1>
+    </div>
+    <div>
+      <p><strong>Meta AI + Muse, merged.</strong> Meta AI brings the social world — fast answers, image smarts, and reach across your apps. Muse brings the personal side — your memory, your files, your plans, handled calmly. This page is a working concept of the two living in one chat.</p>
+      <div class="intro-stats">
+        <div class="stat"><b>Meta AI</b> · social &amp; instant</div>
+        <div class="stat"><b>Muse</b> · personal &amp; remembers</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ THE MERGED APP ============ -->
+  <div class="app" id="app">
+    <div class="app-top">
+      <div class="app-top-left">
+        <span class="live-dot" aria-hidden="true"></span>
+        <div>
+          <strong>Unified chat</strong>
+          <small id="modeHint">Both AIs answer every prompt</small>
+        </div>
+      </div>
+      <div class="seg" role="group" aria-label="Answer mode">
+        <button type="button" data-mode="duo" aria-pressed="true">Side by side</button>
+        <button type="button" data-mode="merged" aria-pressed="false">Merged</button>
+        <button type="button" data-mode="meta" aria-pressed="false">Meta AI</button>
+        <button type="button" data-mode="muse" aria-pressed="false">Muse</button>
+      </div>
+    </div>
+
+    <div class="thread" id="thread" aria-live="polite">
+      <div class="empty" id="emptyState">
+        <div class="duo-icons">
+          <div class="orb meta" style="width:44px;height:44px;font-size:16px">M</div>
+          <div class="orb muse" style="width:44px;height:44px;font-size:16px">✦</div>
+        </div>
+        <h2>One prompt, two takes — or one merged answer</h2>
+        <p>Try a prompt below, or write your own. In Side by side you see how each AI thinks. In Merged, they combine into a single best answer.</p>
+      </div>
+    </div>
+
+    <div class="chips" id="chips">
+      <button type="button" class="chip" data-prompt="Write me a caption for a reel about my new song dropping Friday">🎵 Caption for my song drop <span>— try it</span></button>
+      <button type="button" class="chip" data-prompt="Help me plan a weekend trip to Nelson on the bus with no car">🚌 Plan a bus-only Nelson trip</button>
+      <button type="button" class="chip" data-prompt="Give me an unhinged content idea for my next reel">🎬 Unhinged reel idea</button>
+      <button type="button" class="chip" data-prompt="Explain sideloading apps on iPhone like I'm new to it">📱 Explain sideloading simply</button>
+    </div>
+
+    <form class="composer" id="composer">
+      <div class="composer-inner">
+        <textarea id="input" rows="1" placeholder="Ask Meta AI + Muse anything…" aria-label="Your prompt"></textarea>
+        <button class="send-btn" id="sendBtn" type="submit" aria-label="Send prompt">↑</button>
+      </div>
+      <div class="composer-meta">
+        <span>Concept demo — answers are simulated in this page to show how the merger would feel.</span>
+        <button class="ghost-btn" type="button" id="clearBtn">Clear chat</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section aria-labelledby="how-h">
+    <div class="sec-head">
+      <h2 id="how-h">How the merger works</h2>
+      <p>No switching apps. No copy-pasting between chats.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <h3>You ask once</h3>
+        <p>One composer sends your prompt to both models at the same time — the same way you'd message one assistant today.</p>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <h3>Each plays its strength</h3>
+        <p>Meta AI answers fast and socially — trends, images, what's happening. Muse answers personally — your context, your files, your next move.</p>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <h3>Merged mode picks the best</h3>
+        <p>Flip to Merged and the two answers collapse into one: Meta's speed and reach, Muse's memory and follow-through, no fluff from either.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO BRINGS WHAT ============ -->
+  <section aria-labelledby="compare-h">
+    <div class="sec-head">
+      <h2 id="compare-h">Who brings what</h2>
+      <p>The honest split — neither one replaces the other.</p>
+    </div>
+    <div class="compare">
+      <div class="compare-row head">
+        <div></div>
+        <div><span class="dot meta"></span> Meta AI</div>
+        <div><span class="dot muse"></span> Muse</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Best at</div>
+        <div class="c-meta">Quick answers, image generation, trends, group chats, and living inside Instagram, WhatsApp &amp; Messenger.</div>
+        <div class="c-muse">Remembering your world — your projects, people, and plans — then actually doing the follow-up work.</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Personality</div>
+        <div class="c-meta">Social, playful, everywhere at once. Great first draft energy.</div>
+        <div class="c-muse">Calm and steady. One clear next move instead of ten options when you're stressed.</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">In the merger</div>
+        <div class="c-meta">The eyes and the megaphone: what's out there, right now, and how to post it.</div>
+        <div class="c-muse">The memory and the hands: what's true for <em>you</em>, and getting it done.</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Watch out for</div>
+        <div class="c-meta">Generic answers — it doesn't know your life unless you tell it.</div>
+        <div class="c-muse">It's not plugged into your social feeds the way Meta AI is.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRY IT ============ -->
+  <section aria-labelledby="ideas-h">
+    <div class="sec-head">
+      <h2 id="ideas-h">Prompts built for two brains</h2>
+      <p>Tap one — it runs in the chat above.</p>
+    </div>
+    <div class="ideas">
+      <button type="button" class="idea" data-prompt="I need a caption and a posting plan for a reel announcing my album">
+        <span class="n">A1</span>
+        <span><strong>Drop announcement, end to end</strong><span>Meta AI writes the hook, Muse remembers your release date and posting window.</span></span>
+      </button>
+      <button type="button" class="idea" data-prompt="What phone apps should I sideload first with AltStore?">
+        <span class="n">A2</span>
+        <span><strong>Sideload starter pack</strong><span>Meta AI knows what's popular, Muse tailors picks to customizing and building your own stuff.</span></span>
+      </button>
+      <button type="button" class="idea" data-prompt="Help me write a short, professional email asking about a scholarship">
+        <span class="n">A3</span>
+        <span><strong>An email that sounds like you</strong><span>Meta AI polishes the wording, Muse keeps your real details and deadlines straight.</span></span>
+      </button>
+      <button type="button" class="idea" data-prompt="Give me a comeback for a hater comment on my reel">
+        <span class="n">A4</span>
+        <span><strong>Clapback generator</strong><span>Meta AI reads the room, Muse keeps it cocky but on-brand — engagement, not a ban.</span></span>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <span><strong>Meta AI + Muse</strong> — a concept merger built as a single page. Not an official Meta product.</span>
+    <span>Side by side · Merged · Solo — your call, every prompt.</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var thread = document.getElementById('thread');
+  var emptyState = document.getElementById('emptyState');
+  var input = document.getElementById('input');
+  var form = document.getElementById('composer');
+  var sendBtn = document.getElementById('sendBtn');
+  var modeHint = document.getElementById('modeHint');
+  var mode = 'duo';
+  var busy = false;
+
+  var hints = {
+    duo: 'Both AIs answer every prompt',
+    merged: 'One combined answer, best of both',
+    meta: 'Only Meta AI answers',
+    muse: 'Only Muse answers'
+  };
+
+  document.querySelectorAll('.seg button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.getAttribute('data-mode');
+      document.querySelectorAll('.seg button').forEach(function(b){ b.setAttribute('aria-pressed', b===btn ? 'true':'false'); });
+      modeHint.textContent = hints[mode];
+      input.focus();
+    });
+  });
+
+  function setMode(m){
+    mode = m;
+    document.querySelectorAll('.seg button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-mode')===m ? 'true':'false'); });
+    modeHint.textContent = hints[m];
+  }
+
+  /* ---------- simulated brains ---------- */
+  function pickTopic(q){
+    q = q.toLowerCase();
+    if(/caption|reel|instagram|post|content idea|unhinged|hater|comeback|clapback/.test(q)) return 'social';
+    if(/song|album|drop|music|beat|release/.test(q)) return 'music';
+    if(/trip|nelson|bus|travel|ferry|weekend/.test(q)) return 'trip';
+    if(/sideload|altstore|iphone|app|apps|developer|dev mode/.test(q)) return 'sideload';
+    if(/email|scholarship|write.*letter|professional/.test(q)) return 'email';
+    if(/plan|help me|how do i|what should/.test(q)) return 'plan';
+    return 'general';
+  }
+
+  var brains = {
+    social: {
+      meta: '<p>Here\'s a hook-first take: <strong>lead with the boldest line as on-screen text in the first second</strong> — that\'s what stops the scroll. Caption stays short, ends with a "send this to someone who…" so people share it instead of just liking it.</p><p>Post it in your <strong>6–8 PM window</strong>, then live in the comments for the first 2 hours. That reply thread is where the algorithm decides to push it.</p>',
+      muse: '<p>Keeping it in <em>your</em> voice, not promo-speak: no "go add this to your playlist and stay tuned." Say the real thing — what the song is, why Friday, one line only you would say.</p><p>And your standing rule applies: <strong>edit for the loop</strong> — end frame matches the start frame, payoff at the end, no visible cut line. Pin the funniest comment when it lands.</p>',
+      merged: '<p><strong>The merged play:</strong> open on the boldest line as on-screen text in second one, caption in your own words (no generic promo lines), and close with a share-bait CTA.</p><ul><li>Post <strong>6–8 PM</strong> — your proven window</li><li>Loop it seamlessly, payoff at the end</li><li>Reply to every comment for the first 2 hours, pin the funniest</li></ul><p>Meta AI brings the format that travels; Muse makes sure it still sounds like you and fits the drop plan.</p>'
+    },
+    music: {
+      meta: '<p>For a drop, think rollout, not just release day: <strong>teaser clip today, tracklist tomorrow, drop-day reel Friday</strong>. Short vertical clips of the best 10 seconds outperform cover-art posts almost every time.</p><p>Want me to draft the teaser caption and a story sequence to go with it?</p>',
+      muse: '<p>Anchoring to your actual plan: the drop lives or dies on whether the tracklist is locked, so that\'s the one move first — <strong>finalize the songs before any promo</strong>.</p><p>Your ad-libs and background vocals are the piece you always forget, so build those into this week, not drop week. I\'ll keep the date and the unfinished pieces in view so nothing slips.</p>',
+      merged: '<p><strong>Your rollout, merged:</strong> lock the tracklist first (that\'s the bottleneck), finish ad-libs and background vocals this week, <em>then</em> promo.</p><ul><li>Teaser clip of the best 10 seconds — today</li><li>Tracklist post — tomorrow</li><li>Drop reel in the 6–8 PM window on release day</li></ul><p>Meta AI runs the rollout format; Muse guards the checklist behind it.</p>'
+    },
+    trip: {
+      meta: '<p>Nelson in a weekend: <strong>Baker Street for food and shops, the waterfront for sunset, and Lakeside Park</strong> if you want an easy walk. It\'s a very wanderable town — you don\'t need a packed itinerary.</p><p>I can pull together places to eat and things open late if you tell me the vibe.</p>',
+      muse: '<p>Building it around your real constraint: <strong>you\'re bus-only, and Kootenay buses don\'t run Sundays</strong> — so the return leg decides the whole plan. Go Saturday, come back Saturday night or Monday, or line up the ferry + cab option for Sunday.</p><p>One move first: pick the travel days around that Sunday gap, then everything else slots in.</p>',
+      merged: '<p><strong>The workable Nelson plan:</strong> travel Saturday (buses run), base yourself near Baker Street so everything\'s walkable, waterfront at sunset.</p><ul><li><strong>Don\'t plan a Sunday bus home</strong> — there isn\'t one</li><li>Sunday option: walk-on ferry + cab, booked ahead</li><li>Keep the itinerary light — Nelson rewards wandering</li></ul><p>Meta AI picked the spots; Muse made sure you can actually get home.</p>'
+    },
+    sideload: {
+      meta: '<p>Most people start with <strong>Delta</strong> (retro games), a YouTube mod with no ads, and a file manager. The sideloading scene moves fast — what\'s popular this month is whatever just got a big update.</p><p>Remember the free signing expires in <strong>7 days</strong>, so keep AltStore refreshing over Wi-Fi with your laptop nearby.</p>',
+      muse: '<p>Tailored to what you actually said you want — <strong>customize the UI and build your own stuff</strong>: grab a widget/customization app for the home screen, a code editor for tinkering, and keep AltStore itself pinned so refreshes never lapse.</p><p>Honest limit: sideloading won\'t change the system UI without a jailbreak. Shortcuts + widgets are still the real customization move.</p>',
+      merged: '<p><strong>Your starter pack, merged:</strong></p><ul><li><strong>Delta</strong> — the classic first install</li><li>A widgets app — your actual UI customization route</li><li>A code editor — for building your own projects</li><li>Keep AltStore refreshing — free signing dies at 7 days</li></ul><p>And the straight answer from both of us: no jailbreak, no deep system UI changes. Widgets and Shortcuts are where the customization actually lives.</p>'
+    },
+    email: {
+      meta: '<p>Structure that works: <strong>one-line intro of who you are, one line on why this program, one clear ask, one line of thanks</strong>. Keep it under 150 words — admissions and scholarship inboxes reward short and specific.</p><p>Subject line should name the thing: program, entry term, and "Entrance Scholarship Inquiry."</p>',
+      muse: '<p>Before wording: get the facts straight first — <strong>the real deadlines and whether a separate scholarship application exists</strong>, because at many schools entrance awards run through admissions, not email.</p><p>Then the email\'s job is narrow: ask for full-funding consideration and the exact steps. I\'ll hold your details so the draft says what\'s true about you, nothing padded.</p>',
+      merged: '<p><strong>The merged approach:</strong> verify the process first, then write short.</p><ul><li>Confirm the scholarship route and deadlines before sending</li><li>Draft under 150 words: who you are, why this school, the specific ask</li><li>Subject: program + entry term + scholarship inquiry</li></ul><p>Meta AI sharpens the prose; Muse makes sure you\'re emailing the right ask to the right office.</p>'
+    },
+    plan: {
+      meta: '<p>Here\'s the fast version: <strong>break it into the smallest first step, do that today, and let momentum handle the rest</strong>. Most plans don\'t fail on strategy — they fail on a first step that was too big.</p><p>Tell me the deadline and I\'ll sketch the full sequence.</p>',
+      muse: '<p>One move, not ten: <strong>name the single thing that blocks everything else and do only that next</strong>. I\'ll keep track of the rest so it\'s not all sitting in your head.</p><p>When you give me the details — dates, who\'s involved, what\'s already done — I\'ll hold them and check the plan against your real constraints.</p>',
+      merged: '<p><strong>Merged answer:</strong> find the bottleneck, make it today\'s only job, and park everything else in a list you don\'t have to carry.</p><ul><li>Step 1: the blocking task — today</li><li>Step 2: everything it unlocks — this week</li><li>Step 3: review against your real schedule, not an ideal one</li></ul><p>Meta AI gives the momentum; Muse gives the follow-through.</p>'
+    },
+    general: {
+      meta: '<p>Quick take: <strong>start with the simplest version that works</strong>, get it in front of people, and iterate from real reactions instead of planning in private. That\'s true for apps, posts, and most projects.</p><p>Want links, examples, or a deeper dive on any piece of that?</p>',
+      muse: '<p>My angle is your context: whatever you\'re asking about lands differently depending on <strong>your</strong> time, budget, and what else is already on your plate — so tell me those and I\'ll shape the answer around them instead of handing you the generic version.</p><p>One clear next step beats a menu of options. Always.</p>',
+      merged: '<p><strong>Best of both:</strong> start with the simplest version that works, shaped around your actual constraints — not the generic advice, not a ten-option menu.</p><ul><li>Smallest working version first</li><li>Built around your time and budget</li><li>One next step, clearly named</li></ul><p>That\'s the merger in one answer: Meta AI\'s breadth, Muse\'s memory of what\'s true for you.</p>'
+    }
+  };
+
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function answerCard(kind, label, sub, html){
+    var tags = kind==='meta' ? '<span class="tag meta">Fast · Social · Visual</span>'
+             : kind==='muse' ? '<span class="tag muse">Personal · Remembers · Gets it done</span>'
+             : '<span class="tag meta">Meta AI: reach</span><span class="tag muse">Muse: memory</span>';
+    return '<div class="answer '+kind+'">'
+      + '<div class="answer-head"><div class="orb '+(kind==='merged'?'':kind)+'" style="'+(kind==='merged'?'background:var(--ink);color:var(--bg)':'')+'">'+(kind==='meta'?'M':kind==='muse'?'✦':'≋')+'</div>'
+      + '<strong>'+label+'</strong><span>'+sub+'</span></div>'
+      + '<div class="body">'+html+'</div>'
+      + '<div class="tagrow">'+tags+'</div></div>';
+  }
+
+  function typingCard(kind, label, sub){
+    return '<div class="answer '+kind+'"><div class="answer-head"><div class="orb '+kind+'">'+(kind==='meta'?'M':'✦')+'</div><strong>'+label+'</strong><span>'+sub+'</span></div><span class="typing" aria-label="Thinking"><i></i><i></i><i></i></span></div>';
+  }
+
+  function run(prompt){
+    prompt = (prompt||'').trim();
+    if(!prompt || busy) return;
+    busy = true; sendBtn.disabled = true;
+    if(emptyState) emptyState.style.display = 'none';
+
+    var topic = pickTopic(prompt);
+    var data = brains[topic];
+
+    var turn = document.createElement('div');
+    turn.className = 'turn';
+    var html = '<div class="user-row"><div class="user-bubble">'+esc(prompt)+'</div></div>';
+
+    if(mode === 'duo'){
+      html += '<div class="duo">' + typingCard('meta','Meta AI','answering') + typingCard('muse','Muse','answering') + '</div>';
+    } else if(mode === 'meta'){
+      html += typingCard('meta','Meta AI','answering');
+    } else if(mode === 'muse'){
+      html += typingCard('muse','Muse','answering');
+    } else {
+      html += '<div class="duo"><div class="answer merged"><div class="answer-head"><div class="orb" style="background:var(--ink);color:var(--bg)">≋</div><strong>Merged answer</strong><span>synthesizing</span></div><span class="typing"><i></i><i></i><i></i></span></div></div>';
+    }
+    turn.innerHTML = html;
+    thread.appendChild(turn);
+    turn.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+    var delay = mode==='merged' ? 1100 : 800;
+    setTimeout(function(){
+      var finalHtml = '<div class="user-row"><div class="user-bubble">'+esc(prompt)+'</div></div>';
+      if(mode === 'duo'){
+        finalHtml += '<div class="duo">'
+          + answerCard('meta','Meta AI','fast take', data.meta)
+          + answerCard('muse','Muse','personal take', data.muse)
+          + '</div>'
+          + '<button type="button" class="ghost-btn merge-this" style="align-self:flex-start">≋ Merge these two answers</button>';
+      } else if(mode === 'meta'){
+        finalHtml += answerCard('meta','Meta AI','fast take', data.meta);
+      } else if(mode === 'muse'){
+        finalHtml += answerCard('muse','Muse','personal take', data.muse);
+      } else {
+        finalHtml += '<div class="duo">' + answerCard('merged','Merged answer','best of both', data.merged) + '</div>';
+      }
+      turn.innerHTML = finalHtml;
+
+      var mergeBtn = turn.querySelector('.merge-this');
+      if(mergeBtn){
+        mergeBtn.addEventListener('click', function(){
+          var duo = document.createElement('div');
+          duo.className = 'duo';
+          duo.innerHTML = answerCard('merged','Merged answer','best of both', data.merged);
+          turn.appendChild(duo);
+          mergeBtn.remove();
+          duo.scrollIntoView({behavior:'smooth', block:'nearest'});
+        });
+      }
+      busy = false; sendBtn.disabled = false;
+      input.focus();
+    }, delay);
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = input.value;
+    input.value = ''; autoGrow();
+    run(v);
+  });
+
+  function autoGrow(){
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 110) + 'px';
+    sendBtn.disabled = busy || !input.value.trim();
+  }
+  input.addEventListener('input', autoGrow);
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); form.requestSubmit(); }
+  });
+  sendBtn.disabled = true;
+  autoGrow();
+
+  document.querySelectorAll('[data-prompt]').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.getElementById('app').scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(function(){ run(el.getAttribute('data-prompt')); }, 250);
+    });
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    thread.querySelectorAll('.turn').forEach(function(t){ t.remove(); });
+    if(emptyState) emptyState.style.display = '';
+    input.focus();
+  });
+})();
+</script>
+</body>
+</html>
