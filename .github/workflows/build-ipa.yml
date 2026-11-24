@@ -17,6 +17,7 @@ jobs:
 
       - name: Build unsigned app
         run: |
+          set -o pipefail
           xcodebuild -project MetaMuse.xcodeproj \
             -target MetaMuse \
             -sdk iphoneos \
