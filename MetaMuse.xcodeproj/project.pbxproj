@@ -13,8 +13,8 @@
 
 /* Begin PBXFileReference section */
 		666666666666666666666666 /* MetaMuse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaMuse.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		777777777777777777777777 /* MetaMuseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaMuseApp.swift; sourceTree = <group>; };
-		999999999999999999999999 /* meta-ai-muse.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = meta-ai-muse.html; sourceTree = <group>; };
+		777777777777777777777777 /* MetaMuseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaMuseApp.swift; sourceTree = "<group>"; };
+		999999999999999999999999 /* meta-ai-muse.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = meta-ai-muse.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +34,7 @@
 				444444444444444444444444 /* MetaMuse */,
 				555555555555555555555555 /* Products */,
 			);
-			sourceTree = <group>;
+			sourceTree = "<group>";
 		};
 		444444444444444444444444 /* MetaMuse */ = {
 			isa = PBXGroup;
@@ -43,7 +43,7 @@
 				999999999999999999999999 /* meta-ai-muse.html */,
 			);
 			path = MetaMuse;
-			sourceTree = <group>;
+			sourceTree = "<group>";
 		};
 		555555555555555555555555 /* Products */ = {
 			isa = PBXGroup;
@@ -51,7 +51,7 @@
 				666666666666666666666666 /* MetaMuse.app */,
 			);
 			name = Products;
-			sourceTree = <group>;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
