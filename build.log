@@ -8,8 +8,8 @@ Build settings from command line:
     SDKROOT = iphoneos26.5
     SYMROOT = /Users/runner/work/metamuse/metamuse/build
 
-2026-11-24 05:47:59.080 xcodebuild[1847:9212] Error Domain=NSCocoaErrorDomain Code=3840 "JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0." UserInfo={NSDebugDescription=JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0., NSJSONSerializationErrorIndex=0}
-2026-11-24 05:47:59.166 xcodebuild[1847:9212] Writing error result bundle to /var/folders/q2/p1t6rgxj5fj32g1dc7dmd49r0000gn/T/ResultBundle_2026-24-11_05-47-0059.xcresult
+2026-11-24 05:52:17.268 xcodebuild[2337:10869] Error Domain=NSCocoaErrorDomain Code=3840 "JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0." UserInfo={NSDebugDescription=JSON text did not start with array or object and option to allow fragments not set. around line 1, column 0., NSJSONSerializationErrorIndex=0}
+2026-11-24 05:52:17.282 xcodebuild[2337:10869] Writing error result bundle to /var/folders/q2/p1t6rgxj5fj32g1dc7dmd49r0000gn/T/ResultBundle_2026-24-11_05-52-0017.xcresult
 xcodebuild: error: Unable to read project 'MetaMuse.xcodeproj'.
 	Reason: The project ‘MetaMuse’ is damaged and cannot be opened due to a parse error. Examine the project file for invalid edits or unresolved source control conflicts.
 
